@@ -1,0 +1,91 @@
+body {
+  padding-top: 70px;
+  padding-bottom: 30px;
+}
+
+.mytheme{
+    font-family: Lucida Console;
+}
+
+.label-sample {
+  color: #FFFFFF;
+  background-color: #333333;
+  border-color: #000000;
+}
+
+.open .dropdown-toggle.label-sample {
+  color: #FFFFFF;
+  background-color: #333333;
+  border-color: #000000;
+}
+
+.open .dropdown-toggle.label-sample {
+  background-image: none;
+}
+
+.label-sample .badge {
+  color: #333333;
+  background-color: #FFFFFF;
+}
+
+
+
+
+.btn-sample {
+  color: #FFFFFF;
+  background-color: #333333;
+  border-color: #000000;
+}
+
+.btn-sample:hover,
+.btn-sample:focus,
+.btn-sample:active,
+.btn-sample.active,
+.open .dropdown-toggle.btn-sample {
+  color: #FFFFFF;
+  background-color: #1d2323;
+  border-color: #000000;
+}
+
+.btn-sample:active,
+.btn-sample.active,
+.open .dropdown-toggle.btn-sample {
+  background-image: none;
+}
+
+.btn-sample.disabled,
+.btn-sample[disabled],
+fieldset[disabled] .btn-sample,
+.btn-sample.disabled:hover,
+.btn-sample[disabled]:hover,
+fieldset[disabled] .btn-sample:hover,
+.btn-sample.disabled:focus,
+.btn-sample[disabled]:focus,
+fieldset[disabled] .btn-sample:focus,
+.btn-sample.disabled:active,
+.btn-sample[disabled]:active,
+fieldset[disabled] .btn-sample:active,
+.btn-sample.disabled.active,
+.btn-sample[disabled].active,
+fieldset[disabled] .btn-sample.active {
+  background-color: #333333;
+  border-color: #000000;
+}
+
+.btn-sample .badge {
+  color: #333333;
+  background-color: #FFFFFF;
+}
+.theme-dropdown .dropdown-menu {
+  position: static;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.theme-showcase > p > .btn {
+  margin: 5px 0;
+}
+
+.theme-showcase .navbar .container {
+  width: auto;
+}

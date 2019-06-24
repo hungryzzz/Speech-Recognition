@@ -168,3 +168,28 @@ def vgg19_bn(pretrained=False, progress=True, **kwargs):
         progress (bool): If True, displays a progress bar of the download to stderr
     """
     return _vgg('vgg19_bn', 'E', True, pretrained, progress, **kwargs)
+
+
+
+class Mymodel(nn.Module):
+
+  def __init__(self, config):
+    super(Mymodel, self).__init__()
+
+    self.lstm = nn.LSTM(config.input_s, config.hidden_s, batch_first=True)
+    self.avg1d = nn.AvgPool1d(config.max_len)
+    self.dropout = nn.Dropout(config.dropout_rate)
+    self.fc = nn.Linear(config.hidden_s, config.num_class)
+
+  def forward(self, input_data):
+    out, _ = self.lstm(input_data)
+
+    out = out.permute(0, 2, 1)
+    out = self.avg1d(out)
+
+    out = out.view(-1, out.size(1))
+    
+    out = self.dropout(out)
+    out = self.fc(out)
+
+    return out

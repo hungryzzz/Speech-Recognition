@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <!-- <link rel="icon" href="favicon.ico"> -->
+
+    <title>DSP</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="static/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="static/css/bootstrap-theme.min.css" rel="stylesheet">
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+
+    <!-- Custom styles for this template -->
+    <link href="static/css/theme.css" rel="stylesheet">
+
+    <script type="text/javascript" src="static/js/recorder-core.js"></script>
+    <script type="text/javascript" src="static/js/waveview.js"></script>
+    <script type="text/javascript" src="static/js/wav.js"></script>
+    <script type="text/javascript" src="static/js/d3.min.js"></script>
+
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]><script src="../../assets/js/ie8-responsive-file-warning.js"></script><![endif]-->
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+      <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+
+  <body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+      <div class="container">
+        <div class="navbar-header">
+          <img src="static/dsp.png" alt="wiki" href="#" height="60px">
+        </div>
+      </div>
+    </nav>
+
+    <div class="container theme-showcase" role="main">
+
+       <div class="page-header">
+          <h2 class="mytheme">Choose one word to record and predict:</h2>
+          <p class="mytheme">数字  语音  语言  识别  中国</p>
+          <p class="mytheme">总工  北京  背景  上海  商行</p>
+          <p class="mytheme">复旦  饭店  Speech  Speaker  Signal</p>
+          <p class="mytheme">Process  Print  Open  Close  Project</p>
+          <br/>
+          <div class="row">
+            <button id="recordbtn" onclick="record()" type="button" class="mytheme btn btn-sample disabled">Record</button>
+            <button id="playbtn" onclick="play()" type="button" class="mytheme btn btn-sample disabled">Listen</button>
+            <button id="predictbtn" onclick="predict()" type="button" class="mytheme btn btn-sample disabled">Predict</button>           
+          </div>
+           <br/>
+       </div>
+
+       <div id="content"></div>
+
+       <audio id="recplay" style="width:100%"></audio>
+
+    </div> <!-- /container -->
+
+    <script src="static/js/func.js"></script>
+
+    
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="static/js/jquery.min.js"></script>
+    <script>window.jQuery || document.write('<script src="../../assets/js/vendor/jquery.min.js"><\/script>')</script>
+    <script src="static/js/jquery1.min.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
+    <script src="static/js/docs.min.js"></script>
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  </body>
+</html>

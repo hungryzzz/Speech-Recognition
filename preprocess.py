@@ -1,19 +1,23 @@
 import os
 os.sys.path.append('..')
-import librosa
-import librosa.display
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.io.wavfile as wav
 import math
-import IPython.display as ipd
 from scipy.fftpack import dct
 
-from fastNLP.core import DataSet, Instance
+from python_speech_features import mfcc
+from python_speech_features import logfbank
+import librosa
+import librosa.display
+
+# from fastNLP.core import DataSet, Instance
 import torch
 import glob
 
 path = '../speech_data/'
+save_train_path = '../dataset/train/'
+save_dev_path = '../dataset/dev/'
 
 folders = glob.glob(path + '/*')
 files = sum([glob.glob(folder + '/*') for folder in folders], [])
@@ -56,6 +60,8 @@ class Signal(object):
 
   def get_short_term_ZCR(self, window_size):
     window = np.hamming(window_size)
+    # plt.plot(window)
+    # plt.show()
     i, j = 0, window_size
     step = window_size // 2
     sign = lambda num: 1 if num > 0 else -1 if num < 0 else 0
@@ -146,6 +152,20 @@ class Signal(object):
   def pre_emphasis(self, alpha=0.97):
     y = self.y
     self.y = np.append(y[0], y[1:] - alpha*y[:-1])
+
+  def get_mfcc_via_PHF(self, draw=False, num_mel=128, init_sed=2):
+    sampling_freq = self.sampling_freq
+    # 端点检测
+    begin, end = self.endpoint_detection(draw=draw)
+    if (end - begin) < (0.025*sampling_freq):
+      return False, False
+    self.y = np.append(self.y[begin:end+1], np.zeros(sampling_freq*init_sed - (end - begin)))
+    y = self.y
+
+    mfcc_feat = mfcc(y, sampling_freq, nfilt=num_mel)
+    fbank_feat = logfbank(y, sampling_freq, nfilt=num_mel)
+    return fbank_feat, mfcc_feat
+
   
   def get_mfcc(self, draw=False, num_mel=128, num_cep=12, init_sed=2):
     sampling_freq = self.sampling_freq
@@ -162,6 +182,8 @@ class Signal(object):
     frame_size, frame_stride = 0.03, 0.01
     frame_len, frame_step = round(frame_size*sampling_freq), round(frame_stride*sampling_freq)
     num_frames = math.ceil((sig_len-frame_len) / frame_step)
+    if math.ceil((end-begin-frame_len)/frame_step) <= 0:
+      return False, False
 
     pad_sig_len = num_frames*frame_step + frame_len
     pad_sig = np.append(y, np.zeros((pad_sig_len-sig_len)))
@@ -280,31 +302,54 @@ def read_sig(filename):
   sig = delete_noisy(sig)
   return Signal(normalize(sig), sampling_freq=sampling_freq)
 
+def preprocess(filename):
+  signal = read_sig(filename)
+  mfcc_feat, _ = signal.get_mfcc_via_PHF()
+  if mfcc_feat is False:
+    return False
+  else:
+    return mfcc_feat
+    
 
 def get_preprocess_dataset():
-  dataset = DataSet()
   for i in range(0, len(files)):
     filename = files[i]
     signal = read_sig(filename)
-    mfcc, _ = signal.get_mfcc()
-    print(mfcc.shape)
-    # mfcc = np.concatenate((mfcc, np.zeros((21-mfcc.shape[0], mfcc.shape[1]))), axis=0)
-    # target = int(files[i].split('-')[1])
-    # dataset.append(Instance(seq=mfcc, target=target))
-  return dataset
+    # mfcc_feat, _ = signal.get_mfcc()
+    mfcc_feat, _ = signal.get_mfcc_via_PHF()
+    if mfcc_feat is False:
+      continue
+    if (i+1) % 20 == 0:
+      np.save(save_dev_path+filename.split('\\')[-1].split('.')[0], mfcc_feat)
+    else:
+      np.save(save_train_path+filename.split('\\')[-1].split('.')[0], mfcc_feat)
+    if (i+1) % 200 == 0:
+      print('{} saved!'.format(i+1))
 
-error = [10440, 10460, 10480, 10500, 10540, 10580, 10600, 10620, 10640,
-         10660, 10680, 10740]
+
+    
 
 if __name__ == "__main__":
   # get_preprocess_dataset()
-  for i in error:
-    filename = files[i]
-    signal = read_sig(filename)
-    print(filename)
-    signal.endpoint_detection(draw=True)
-    # print(signal.sampling_freq ,len(signal.y))
-    # mfcc, _ = signal.get_mfcc()
-    # print(mfcc.shape)
-  # dataset_train, dataset_dev = get_preprocess_dataset()
+
+  filelist = [files[1664], files[1678], files[1275], files[868]]
+  signal = read_sig(files[0])
+  mfcc_feat, _ = signal.get_mfcc()
+  print(mfcc_feat.shape)
+  # plt.figure(num = 1)
+  # a = [1, 1, 2, 2]
+  # b = [1, 2, 1, 2]
+  # for i in range(len(filelist)):
+  #   plt.figure()
+  #   y, sr = librosa.load(filelist[i], sr=None)
+  #   plt.subplot(2, 1, 1)
+  #   librosa.display.waveplot(y, sr)
+  #   melspec = librosa.feature.melspectrogram(y, sr, n_fft=1024, hop_length=512, n_mels=128)
+  #   logmelspec = librosa.power_to_db(melspec)
+  #   plt.subplot(2, 1, 2)
+  #   librosa.display.specshow(logmelspec, sr=sr, x_axis='time', y_axis='mel')
+  #   plt.tight_layout()
+  #   plt.show()
+
+
   
