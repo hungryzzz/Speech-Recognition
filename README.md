@@ -9,11 +9,13 @@
 * 在识别中，我们希望从带噪声的信号中得到纯净的语音信号，以此来减小噪声对识别过程的干扰，因此通过信号的时域特征来进行端点检测。本实验采用短时能量和短时过零率来进行测定。
 
 > 平均短时能量
+
 * 由于在一段语音信号中，包含语音的信号强度比背景噪声大得多，而短时能量就是衡量信号强度的
 指标之一，因此可以用它来进行端点检测。
 * 对信号进行分帧、加窗之后，$S_{w}[i : j]$的短时能量可以定义为$$STE = \sum_{n=i}^{j} S_{w}(n)^2$$即每一帧信号的的平方和。
 
 > 平均短时过零率
+
 * 仅仅以短时能量作为端点检测的指标还是不够的，如果是像`speech`这样以清音开头的单词，则无法正确得到其端点，因为清音的短时能量与背景噪声接近。因此还需要引入短时过零率。
 * 同样对信号进行分帧、加窗之后，$S_{w}[i : j]$的短时过零率可以定义为$$STZCR = \frac{1}{2} \sum_{k=i}^{j-1} abs[sgn(S_{w}[k+1]) - sgn(S_{w}[k])]$$即每一帧内信号通过0的次数。
 
@@ -24,6 +26,7 @@
 	* 最后再根据短时过零率的指标，设置一个较高的短时过零率阈值$ZRC_{0}$，从$N_{2}$开始往信号的两端进行检测，遇到第一个短时过零率小于该阈值的帧，则将其标注为信号的端点。
 
 > 端点检测结果
+
 ![1](https://lh3.googleusercontent.com/FtgPuA2IWM0qfwsgcf2R9wKVUna_8uXpffA6M6AkQCSvUnb9gZZCvidnSMoE7XyOQSOlrTOEPfAB)
 ![2](https://lh3.googleusercontent.com/EPYjx89O212WwLWbrT2PNhTASjZElT491Y3yKRic-Z7wxPfkQzh786U6d_H7kigCvYDa6CIN0_zx)
 
@@ -33,6 +36,7 @@
 * 对于$y_{n} = x_{n} - \alpha x_{n-1}$的系统而言，其传递函数是$H_{z} = 1- az^{-1}$，为一个一阶线性高通滤波器。因此，只要让信号通过该高通滤波器就能增强其高频部分。在代码实现上，只要对数组进行加权差分就能实现。
 
 > 预加重前后信号波形对比
+
 ![3](https://lh3.googleusercontent.com/raSoCVrppP2zd1SCJqVNMXjTdpAnqQ3hzc-r4UwcxED0oQrjOjJPLRsxXNnnrxx9zrvdOr2EfNm4)
 
 #### 分帧
@@ -55,15 +59,19 @@
 本实验识别模型采用Pytorch神经网络框架完成。比较了以VGG11和LSTM 作为模型的结果，最终选取VGG11。
 
 > 模型构建
+
 * 本实验通过对功率谱进行分类来实现语音识别，因此选择VGG11模型作为本实验的模型：使用3 * 3的卷积核构建的8层深度卷积神经网络。具体结构如下：
 ![model](https://lh3.googleusercontent.com/whCxnfL9_ugNqxJfz2feHoM5RSVpVeZEUpRedM6ou3vEDfJM1JFg1G9susBmq0X-48UKmIJ-EewZ)
 
 > 模型训练
+
 * 利用了Pytorch提供的BP模块，选择交叉熵作为损失函数，Adam作为梯度优化器。
 
 #### 前端界面
 * 为了操作方便，使用`JQuery`和`Bootstrap`实现了前端界面，提供了录音和预测的功能。
+
 >界面如下
+
 ![8](https://lh3.googleusercontent.com/rLdzQnMoFWdJ1EJrMPtG_VJae917TLZDaL3SjAjsstKYGUnfkLg80TTtcKFZ6E2qTKicCH_7H50z)
 
 #### 服务器端
@@ -72,12 +80,15 @@
 
 ### 实验设置及数据集
 #### 实验设置
+
 > 端点检测、预加重
+
 * 帧长为10ms，步长为帧长的一半
 * 通过多次尝试，最终$E_{Max}$ = 2， $E_{Min}$ = 1， $ZCR_{0}$ = 40
 * $\alpha$ = 0.97
 
 > 分帧、加窗、梅尔频率域特征
+
 * 帧长为30ms，步长为10ms
 * 窗函数选择汉明窗
 * Mel滤波器组个数为128，最终得到的梅尔频率域特征为128 * 100
@@ -85,6 +96,7 @@
 ![4](https://lh3.googleusercontent.com/bmBeUV4Jq8v0mwblhAAcB7gEcYwsI2xTMU9zAjXfl2YEWlMvUntmUtuIQsXKIZE6aLY6qBEDlXUl)
 
 > 模型参数
+
 * batch size = 32
 * 迭代次数 = 15
 * 学习率在前10次迭代中为4e-5，后5次迭代中为1e-5
@@ -95,7 +107,9 @@
 
 
 ### 实验结果分析与讨论
+
 > 下图为不同人念同一个单词时的功率图
+
 ![5](https://lh3.googleusercontent.com/pjADgg-PJohliEaWvH13rHjLeJOQdkGPtn1BPNmnOjqAtGw8a94fAuAItKoag9LoGMFTU3esTpLS)
 
 * 训练结束后，在训练集上能获得99.27%的准确率，在验证集上能获得94.71%的准确率。可以看出VGG11模型在该实验中效果较好。
