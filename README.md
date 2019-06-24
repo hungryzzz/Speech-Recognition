@@ -28,6 +28,7 @@
 > 端点检测结果
 
 ![1](https://lh3.googleusercontent.com/FtgPuA2IWM0qfwsgcf2R9wKVUna_8uXpffA6M6AkQCSvUnb9gZZCvidnSMoE7XyOQSOlrTOEPfAB)
+
 ![2](https://lh3.googleusercontent.com/EPYjx89O212WwLWbrT2PNhTASjZElT491Y3yKRic-Z7wxPfkQzh786U6d_H7kigCvYDa6CIN0_zx)
 
 
@@ -60,7 +61,8 @@
 
 > 模型构建
 
-* 本实验通过对功率谱进行分类来实现语音识别，因此选择VGG11模型作为本实验的模型：使用3 * 3的卷积核构建的8层深度卷积神经网络。具体结构如下：
+* 本实验通过对功率谱进行分类来实现语音识别，因此选择VGG11模型作为本实验的模型：使用3 * 3的卷积核构建的8层深度卷积神经网络。具体结构如下：\
+
 ![model](https://lh3.googleusercontent.com/whCxnfL9_ugNqxJfz2feHoM5RSVpVeZEUpRedM6ou3vEDfJM1JFg1G9susBmq0X-48UKmIJ-EewZ)
 
 > 模型训练
@@ -93,6 +95,7 @@
 * 窗函数选择汉明窗
 * Mel滤波器组个数为128，最终得到的梅尔频率域特征为128 * 100
 * 下图为汉明窗波形图
+
 ![4](https://lh3.googleusercontent.com/bmBeUV4Jq8v0mwblhAAcB7gEcYwsI2xTMU9zAjXfl2YEWlMvUntmUtuIQsXKIZE6aLY6qBEDlXUl)
 
 > 模型参数
@@ -113,6 +116,7 @@
 ![5](https://lh3.googleusercontent.com/pjADgg-PJohliEaWvH13rHjLeJOQdkGPtn1BPNmnOjqAtGw8a94fAuAItKoag9LoGMFTU3esTpLS)
 
 * 训练结束后，在训练集上能获得99.27%的准确率，在验证集上能获得94.71%的准确率。可以看出VGG11模型在该实验中效果较好。
+
 ![6](https://lh3.googleusercontent.com/PgMzUOXlKpHgHpTc9Nje94I3ir4BbM2zOC-F6MpGD986X2JWMSG7ReC7i1ceoZLV8ISAnByIRN1x)
 
 
